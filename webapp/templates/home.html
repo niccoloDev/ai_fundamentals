@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    {{ super() }}
+
+    .flexContainer {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        align-items: flex-start;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 15px 0px;
+        max-height: 100vh;
+        max-width: 80%
+    }
+
+    .flexItem {
+        max-width: 40%
+    }
+
+    .marginOverride {
+        margin: 0;
+    }
+
+    .break {
+        flex-basis: 100%;
+        height = 0;
+    }
+
+    .breakForColumns {
+        flex-basis: 100vh;
+        width: 0;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .radiosContainer {
+        display: flex;
+        gap: 0px 10px;
+    }
+
+    .hero {
+        font-size: 3em;   /* makes the text bigger */
+        font-family: 'Ubuntu', sans-serif;
+    }
+
+{% endblock styles %}
+
+{% block title %}
+    Home Page
+{% endblock %}
+
+{% block content %}
+<body>
+    <div class="container">
+        <form method="POST" class="form-register flexContainer" style="color:white">
+            {{ form.hidden_tag() }}
+
+            <img src="../static/images/genlogo.png" alt="">
+            <div class="breakForColumns"></div>
+
+            <h1 class="h3 hero">
+                Let the fittest win!
+            </h1>
+            <div class="break"></div>
+
+            <div class="radiosContainer">
+            {% for rdo_choice in form.rdo_gen_strategy %}
+                {{ rdo_choice(class="marginOverride gen_strategy_class") }} {{ rdo_choice.label(class="marginOverride") }}
+            {% endfor %}
+            </div>
+            <div class="break"></div>
+
+            {{ form.tickers.label(class="tickers hidden") }}
+            {{ form.tickers(class="form-control tickers flexItem hidden", placeholder="Comma separated list of tickers") }}
+
+            {{ form.tickers_num.label(class="tickers_num hidden") }}
+            {{ form.tickers_num(class="form-control tickers_num flexItem hidden", placeholder="Number of tickers") }}
+            <div class="break"></div>
+
+            {{ form.submit(class="btn btn-lg btn-block btn-primary flexItem") }}
+
+        </form>
+
+        {% include 'results.html' %}
+
+        {% if show_results_modal %}
+          <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const results_modal = new bootstrap.Modal(document.getElementById('resultsModal'), {});
+                    results_modal.show();
+                });
+          </script>
+        {% endif %}
+
+    </div>
+</body>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+{% endblock scripts %}
+
