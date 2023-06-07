@@ -63,7 +63,7 @@ class DataLoader:
     # we accept the ticker's data if it has at least the data for the 60% of the trading days of the period specified
     @staticmethod
     def _compute_min_data_len(start_date, end_date):
-        time_period = datetime.strptime(end_date, '%Y-%m-%d').date() - datetime.strptime(start_date, '%Y-%m-%d').date()
+        time_period = end_date - start_date
         trading_days_perc = 252 / 365
         actual_trading_days = time_period.days * trading_days_perc
         return actual_trading_days * 0.6

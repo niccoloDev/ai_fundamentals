@@ -10,13 +10,9 @@
         align-items: flex-start;
         justify-content: center;
         flex-wrap: wrap;
-        gap: 15px 0px;
+        gap: 15px 30px;
         max-height: 100vh;
         max-width: 80%
-    }
-
-    .flexItem {
-        max-width: 40%
     }
 
     .marginOverride {
@@ -37,14 +33,30 @@
         display: none;
     }
 
-    .radiosContainer {
-        display: flex;
-        gap: 0px 10px;
-    }
-
     .hero {
         font-size: 3em;   /* makes the text bigger */
         font-family: 'Ubuntu', sans-serif;
+    }
+
+    .innerContainer {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        gap: 15px 10px;
+        align-items: stretch;
+        max-height: 80vh;
+        justify-content: flex-start;
+    }
+
+    .rowContainer {
+        display: flex;
+        gap: 10px 10px;
+        align-items: baseline;
+    }
+
+    .alignLabels {
+        min-width: 75px;
     }
 
 {% endblock styles %}
@@ -62,27 +74,41 @@
             <img src="../static/images/genlogo.png" alt="">
             <div class="breakForColumns"></div>
 
-            <h1 class="h3 hero">
-                Let the fittest win!
-            </h1>
-            <div class="break"></div>
+            <div class="innerContainer">
+                <h1 class="h3 hero">
+                    Let the fittest win!
+                </h1>
+                <div class="break"></div>
 
-            <div class="radiosContainer">
-            {% for rdo_choice in form.rdo_gen_strategy %}
-                {{ rdo_choice(class="marginOverride gen_strategy_class") }} {{ rdo_choice.label(class="marginOverride") }}
-            {% endfor %}
+                <div class="rowContainer">
+                    {% for rdo_choice in form.rdo_gen_strategy %}
+                        {{ rdo_choice(class="marginOverride gen_strategy_class") }} {{ rdo_choice.label(class="marginOverride") }}
+                    {% endfor %}
+                </div>
+                <div class="break"></div>
+
+                <div class="rowContainer">
+                {{ form.tickers.label(class="tickers alignLabels") }}
+                {{ form.tickers(class="form-control tickers", placeholder="Comma separated list of tickers") }}
+
+                {{ form.tickers_num.label(class="tickers_num hidden alignLabels") }}
+                {{ form.tickers_num(class="form-control tickers_num hidden", placeholder="Number of tickers") }}
+                </div>
+
+                <div class="break"></div>
+
+                <div class="rowContainer">
+                    {{ form.start_date.label(class="alignLabels") }}
+                    {{ form.start_date() }}
+
+                    {{ form.end_date.label(class="alignLabels") }}
+                    {{ form.end_date() }}
+                </div>
+
+                <div class="break"></div>
+
+                {{ form.submit(class="btn btn-lg btn-block btn-primary flexItem") }}
             </div>
-            <div class="break"></div>
-
-            {{ form.tickers.label(class="tickers hidden") }}
-            {{ form.tickers(class="form-control tickers flexItem hidden", placeholder="Comma separated list of tickers") }}
-
-            {{ form.tickers_num.label(class="tickers_num hidden") }}
-            {{ form.tickers_num(class="form-control tickers_num flexItem hidden", placeholder="Number of tickers") }}
-            <div class="break"></div>
-
-            {{ form.submit(class="btn btn-lg btn-block btn-primary flexItem") }}
-
         </form>
 
         {% include 'results.html' %}
