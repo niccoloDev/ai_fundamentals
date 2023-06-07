@@ -59,7 +59,7 @@ class PortfolioGenerator:
         population = []
 
         for i in range(100):
-            weights = np.random.random(5)
+            weights = np.random.random(len(assets))
             # normalize weights so that they sum to one
             weights = weights / weights.sum()
 
