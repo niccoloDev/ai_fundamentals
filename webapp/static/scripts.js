@@ -5,21 +5,40 @@ $(document).ready(function(){
         const selectedValue = $(this).val();
         if( selectedValue === "Choose" ) {
             $('.tickers').show();
-            $('.tickers_num').hide();
+            $('.tickers_num').hide().val("");
+
         }
         else if( selectedValue === "Random" ) {
-            $('.tickers').hide();
+            $('.tickers').hide().val("");
             $('.tickers_num').show();
         }
     })
 });
 
-<!-- handle pie graph -->
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+
+<!-- handle pie graph and progress bar (websocket communication) -->
 document.addEventListener('DOMContentLoaded', (event) => {
-            var socket = io.connect('http://' + document.domain + ':' + location.port + '/portfolio_generation');
+            const socket = io.connect('http://' + document.domain + ':' + location.port + '/portfolio_generation');
+
             socket.on('connect', function() {
                 console.log('Connected');
 
+            });
+
+            socket.on('progress_update', function(msg) {
+                //console.log(msg.progress)
+                const progressBar = document.getElementById('algoProgressBar');
+                progressBar.style.width = msg.progress + '%';
+                progressBar.setAttribute('aria-valuenow', msg.progress);
             });
 
             let pieChart = null
@@ -30,13 +49,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 const portfolio = JSON.parse(json_response);
                 var xValues = portfolio.assets.map(p => p.ticker+': '+((p.weight * 100).toFixed(2))+'%');
                 var yValues = portfolio.assets.map(p => p.weight);
-                var barColors = [
-                  "#b91d47",
-                  "#00aba9",
-                  "#2b5797",
-                  "#e8c3b9",
-                  "#1e7145"
-                ];
+                var barColors = portfolio.assets.map(_ => getRandomColor());
+
 
                 if (pieChart !== null) {
                     pieChart.destroy();
@@ -65,9 +79,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                             // This more specific font property overrides the global property
                             fontColor: 'white',
                             fontSize: 14
-            }
-        }
+                        }
+                    }
                   }
                 });
             });
         });
+
