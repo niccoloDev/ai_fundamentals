@@ -42,16 +42,25 @@ class PortfolioGenerator:
         return data
 
     def _calculate_sharpe_ratio(self, assets):
-        # Initializing a series of zeros with the same index as the data
-        returns = pd.Series(0, index=assets[0].data.index)
+        # Initializing an empty DataFrame with the same index as the data
+        daily_returns = pd.DataFrame(index=assets[0].data.index)
 
+        # Calculate daily returns for each asset and scale by asset weight
         for asset in assets:
-            returns += asset.data['Adj Close'].pct_change() * asset.weight
-        returns = returns.dropna()
+            daily_returns[asset.ticker] = asset.data['Adj Close'].pct_change() * asset.weight
 
-        excess_returns = returns - self.risk_free_return
+        # Sum across rows (axis=1) to get portfolio return for each day
+        portfolio_returns = daily_returns.sum(axis=1).dropna()
 
-        sharpe_ratio = np.sqrt(252) * excess_returns.mean() / excess_returns.std()
+        # Calculate expected return as the mean of the portfolio's daily returns
+        expected_portfolio_return = portfolio_returns.mean()
+
+        # Calculate excess returns
+        excess_returns = portfolio_returns - self.risk_free_return
+
+        # Calculate Sharpe Ratio
+        sharpe_ratio = np.sqrt(252) * (expected_portfolio_return - self.risk_free_return) / excess_returns.std()
+
         return sharpe_ratio
 
     def _initialize_population(self, assets):
