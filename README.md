@@ -3,9 +3,7 @@
 
 ## How to use
 After cloning, cd into the project folder and run
-``bash
-  docker compose up
-``
+``docker compose up``
 The web application will be available on port 5000 (http://evolutrade:5000 or http://localhost:5000).
 
 # EvoluTrade: A Web-Based Tool for Stock Portfolio Generation using an Evolutionary Algorithm
