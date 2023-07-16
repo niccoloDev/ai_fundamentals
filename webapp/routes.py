@@ -19,7 +19,7 @@ def home_page():
 
         generator = PortfolioGenerator(form.start_date.data, form.end_date.data)
         thread = socketio.start_background_task(target=generator.generate_portfolio,
-                                                tickers=tickers, gen_num=500)
+                                                tickers=tickers, gen_num=300)
         show_results_modal = True
 
     return render_template('home.html', form=form, show_results_modal=show_results_modal)

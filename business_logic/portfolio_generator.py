@@ -222,4 +222,5 @@ class PortfolioGenerator:
             print(f"Iteration #{i}: {current_best_portfolio.fitness}")
             self._send_progress_update(round(i/gen_num * 100))
         print("--------------DONE-----------------")
+        self._send_progress_update(100)
         return current_best_portfolio
