@@ -161,7 +161,7 @@ class PortfolioGenerator:
 
     def _send_progress_update(self, progress):
         current_time = time.time()
-        if current_time - self.last_update_time >= 1.0:  # 1 second has passed
+        if (current_time - self.last_update_time >= 1.0) or progress == 100:  # 1 second has passed or is final update
             socketio.emit('progress_update',
                           {'progress': progress},
                           namespace='/portfolio_generation')
@@ -222,5 +222,4 @@ class PortfolioGenerator:
             print(f"Iteration #{i}: {current_best_portfolio.fitness}")
             self._send_progress_update(round(i/gen_num * 100))
         print("--------------DONE-----------------")
-        self._send_progress_update(100)
         return current_best_portfolio
